@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { appendFile } from "node:fs/promises";
+import { createClient } from "@supabase/supabase-js";
 
 export const runtime = "nodejs";
 
@@ -49,23 +50,54 @@ export async function POST(request: Request) {
       console.error("Formspree error", response.status, responseText);
 
       try {
-        await appendFile(
-          "/tmp/expedition-america-leads-backup.jsonl",
-          `${JSON.stringify({ ...leadRecord, backupReason: `formspree-${response.status}` })}\n`,
-          "utf8"
-        );
+        const supabaseUrl = process.env.SUPABASE_URL;
+        const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+        const leadsTable = process.env.SUPABASE_LEADS_TABLE ?? "lead_submissions";
+
+        if (supabaseUrl && supabaseServiceRoleKey) {
+          const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
+            auth: { persistSession: false },
+          });
+
+          const { error } = await supabase.from(leadsTable).insert({
+            ...leadRecord,
+            backup_reason: `formspree-${response.status}`,
+          });
+
+          if (error) {
+            throw error;
+          }
+        } else {
+          throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+        }
 
         return NextResponse.json({
           ok: true,
           queued: true,
-          message: "Lead was saved to backup queue.",
+          message: "Lead was saved to Supabase backup.",
         });
       } catch (backupError) {
-        console.error("Backup write failed", backupError);
-        return NextResponse.json(
-          { error: "Lead capture failed at destination and backup storage." },
-          { status: 502 }
-        );
+        console.error("Supabase backup failed", backupError);
+
+        try {
+          await appendFile(
+            "/tmp/expedition-america-leads-backup.jsonl",
+            `${JSON.stringify({ ...leadRecord, backupReason: `formspree-${response.status}` })}\n`,
+            "utf8"
+          );
+
+          return NextResponse.json({
+            ok: true,
+            queued: true,
+            message: "Lead was saved to emergency backup queue.",
+          });
+        } catch (emergencyBackupError) {
+          console.error("Emergency backup write failed", emergencyBackupError);
+          return NextResponse.json(
+            { error: "Lead capture failed at destination and backup storage." },
+            { status: 502 }
+          );
+        }
       }
     }
 
