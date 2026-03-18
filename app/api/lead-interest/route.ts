@@ -20,29 +20,20 @@ export async function POST(request: Request) {
       );
     }
 
-    const webhookUrl = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
-    if (!webhookUrl) {
-      return NextResponse.json(
-        { error: "Google Sheets integration is not configured." },
-        { status: 500 }
-      );
-    }
-
-    const leadRow = {
-      timestamp: new Date().toISOString(),
-      source: "events-expression-of-interest",
-      fullName: payload.fullName,
-      email: payload.email,
-      cityOfInterest: payload.cityOfInterest,
-      travelDates: payload.travelDates ?? "",
-      experienceType: payload.experienceType,
-      additionalNotes: payload.additionalNotes ?? "",
-    };
-
-    const response = await fetch(webhookUrl, {
+    const response = await fetch("https://formspree.io/f/xqeywzzq", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(leadRow),
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: JSON.stringify({
+        name: payload.fullName,
+        email: payload.email,
+        city: payload.cityOfInterest,
+        dates: payload.travelDates ?? "",
+        experience: payload.experienceType,
+        notes: payload.additionalNotes ?? "",
+      }),
       cache: "no-store",
     });
 

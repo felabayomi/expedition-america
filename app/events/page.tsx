@@ -45,23 +45,14 @@ export default function EventsPage() {
     setSuccessMessage("");
     setErrorMessage("");
 
-    const formData = {
-      name: form.fullName,
-      email: form.email,
-      city: form.cityOfInterest,
-      dates: form.travelDates,
-      experience: form.experienceType,
-      notes: form.additionalNotes,
-    };
-
     try {
-      const res = await fetch(process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL!, {
+      const res = await fetch("/api/lead-interest", {
         method: "POST",
-        body: JSON.stringify(formData),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
       });
 
-      const data = await res.json();
-      console.log(data);
+      if (!res.ok) throw new Error("Request failed");
 
       setSuccessMessage("Request submitted successfully!");
       setForm(initialFormState);
