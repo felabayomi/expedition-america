@@ -18,7 +18,7 @@ const cityCardActions = [
   },
   {
     key: "request",
-    label: "Request",
+    label: "Group Travel",
     className: "bg-amber-500 text-slate-900 hover:bg-amber-400",
   },
 ] as const;
