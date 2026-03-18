@@ -13,6 +13,36 @@ type LeadPayload = {
   additionalNotes?: string;
 };
 
+async function saveLeadToSupabase(leadRecord: {
+  timestamp: string;
+  source: string;
+  name: string;
+  email: string;
+  city: string;
+  dates: string;
+  experience: string;
+  notes: string;
+  backup_reason?: string;
+}) {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const leadsTable = process.env.SUPABASE_LEADS_TABLE ?? "lead_submissions";
+
+  if (!supabaseUrl || !supabaseServiceRoleKey) {
+    throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
+    auth: { persistSession: false },
+  });
+
+  const { error } = await supabase.from(leadsTable).insert(leadRecord);
+
+  if (error) {
+    throw error;
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const payload = (await request.json()) as LeadPayload;
@@ -35,6 +65,15 @@ export async function POST(request: Request) {
       notes: payload.additionalNotes ?? "",
     };
 
+    let savedToSupabase = false;
+
+    try {
+      await saveLeadToSupabase(leadRecord);
+      savedToSupabase = true;
+    } catch (supabaseError) {
+      console.error("Supabase primary save failed", supabaseError);
+    }
+
     const response = await fetch("https://formspree.io/f/xqeywzzq", {
       method: "POST",
       headers: {
@@ -49,27 +88,19 @@ export async function POST(request: Request) {
       const responseText = await response.text();
       console.error("Formspree error", response.status, responseText);
 
+      if (savedToSupabase) {
+        return NextResponse.json({
+          ok: true,
+          queued: true,
+          message: "Lead was saved to Supabase backup.",
+        });
+      }
+
       try {
-        const supabaseUrl = process.env.SUPABASE_URL;
-        const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-        const leadsTable = process.env.SUPABASE_LEADS_TABLE ?? "lead_submissions";
-
-        if (supabaseUrl && supabaseServiceRoleKey) {
-          const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
-            auth: { persistSession: false },
-          });
-
-          const { error } = await supabase.from(leadsTable).insert({
-            ...leadRecord,
-            backup_reason: `formspree-${response.status}`,
-          });
-
-          if (error) {
-            throw error;
-          }
-        } else {
-          throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
-        }
+        await saveLeadToSupabase({
+          ...leadRecord,
+          backup_reason: `formspree-${response.status}`,
+        });
 
         return NextResponse.json({
           ok: true,
@@ -101,7 +132,7 @@ export async function POST(request: Request) {
       }
     }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, stored: savedToSupabase });
   } catch (error) {
     console.error("Lead API unexpected error", error);
     return NextResponse.json(
