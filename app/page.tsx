@@ -91,9 +91,7 @@ export default function Home() {
           }}
         >
           <a
-            href="https://discoverer.city"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/deals"
             style={{
               display: "inline-block",
               padding: "16px 30px",
@@ -106,7 +104,7 @@ export default function Home() {
               textDecoration: "none"
             }}
           >
-            Explore Cities
+            Explore Deals
           </a>
           <a
             href="https://plan.citydiscoverer.ai"

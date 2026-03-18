@@ -20,7 +20,7 @@ export default function Navbar() {
         <Link href="/cities">Cities</Link>
         <Link href="/experiences">Experiences</Link>
         <Link href="/events">Events</Link>
-        <Link href="/about">About</Link>
+        <Link href="/deals">Deals</Link>
       </div>
 
     </nav>
