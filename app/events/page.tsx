@@ -46,27 +46,23 @@ export default function EventsPage() {
     setErrorMessage("");
 
     try {
-      const res = await fetch("https://formspree.io/f/xqeywzzq", {
+      const res = await fetch("/api/lead-interest", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",
         },
-        body: JSON.stringify({
-          name: form.fullName,
-          email: form.email,
-          city: form.cityOfInterest,
-          dates: form.travelDates,
-          experience: form.experienceType,
-          notes: form.additionalNotes,
-          _replyto: form.email,
-          _subject: `New Expedition America lead: ${form.fullName}`,
-        }),
+        body: JSON.stringify(form),
       });
 
       if (!res.ok) throw new Error("Request failed");
 
-      setSuccessMessage("Request submitted successfully!");
+      const data = (await res.json()) as { queued?: boolean };
+
+      setSuccessMessage(
+        data.queued
+          ? "Request received and queued safely. We will follow up shortly."
+          : "Request submitted successfully!"
+      );
       setForm(initialFormState);
     } catch (err) {
       console.error(err);

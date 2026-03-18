@@ -1,4 +1,7 @@
 import { NextResponse } from "next/server";
+import { appendFile } from "node:fs/promises";
+
+export const runtime = "nodejs";
 
 type LeadPayload = {
   fullName?: string;
@@ -20,30 +23,50 @@ export async function POST(request: Request) {
       );
     }
 
+    const leadRecord = {
+      timestamp: new Date().toISOString(),
+      source: "events-expression-of-interest",
+      name: payload.fullName,
+      email: payload.email,
+      city: payload.cityOfInterest,
+      dates: payload.travelDates ?? "",
+      experience: payload.experienceType,
+      notes: payload.additionalNotes ?? "",
+    };
+
     const response = await fetch("https://formspree.io/f/xqeywzzq", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
       },
-      body: JSON.stringify({
-        name: payload.fullName,
-        email: payload.email,
-        city: payload.cityOfInterest,
-        dates: payload.travelDates ?? "",
-        experience: payload.experienceType,
-        notes: payload.additionalNotes ?? "",
-      }),
+      body: JSON.stringify(leadRecord),
       cache: "no-store",
     });
 
     if (!response.ok) {
       const responseText = await response.text();
-      console.error("Sheets webhook error", response.status, responseText);
-      return NextResponse.json(
-        { error: "Lead capture failed at destination." },
-        { status: 502 }
-      );
+      console.error("Formspree error", response.status, responseText);
+
+      try {
+        await appendFile(
+          "/tmp/expedition-america-leads-backup.jsonl",
+          `${JSON.stringify({ ...leadRecord, backupReason: `formspree-${response.status}` })}\n`,
+          "utf8"
+        );
+
+        return NextResponse.json({
+          ok: true,
+          queued: true,
+          message: "Lead was saved to backup queue.",
+        });
+      } catch (backupError) {
+        console.error("Backup write failed", backupError);
+        return NextResponse.json(
+          { error: "Lead capture failed at destination and backup storage." },
+          { status: 502 }
+        );
+      }
     }
 
     return NextResponse.json({ ok: true });
