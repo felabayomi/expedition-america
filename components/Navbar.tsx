@@ -16,6 +16,27 @@ const links = [
 export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+
+    const syncViewport = () => {
+      const desktop = mediaQuery.matches;
+      setIsDesktop(desktop);
+
+      if (desktop) {
+        setIsOpen(false);
+      }
+    };
+
+    syncViewport();
+    mediaQuery.addEventListener("change", syncViewport);
+
+    return () => {
+      mediaQuery.removeEventListener("change", syncViewport);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isOpen) {
@@ -30,23 +51,15 @@ export default function Navbar() {
   }, [isOpen]);
 
   useEffect(() => {
-    const onResize = () => {
-      if (window.innerWidth >= 768) {
-        setIsOpen(false);
-      }
-    };
-
     const onEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsOpen(false);
       }
     };
 
-    window.addEventListener("resize", onResize);
     window.addEventListener("keydown", onEscape);
 
     return () => {
-      window.removeEventListener("resize", onResize);
       window.removeEventListener("keydown", onEscape);
     };
   }, []);
@@ -91,7 +104,6 @@ export default function Navbar() {
           aria-controls="primary-navigation"
           onClick={() => setIsOpen((prev) => !prev)}
           style={{
-            display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
             width: "40px",
@@ -101,6 +113,7 @@ export default function Navbar() {
             backgroundColor: "#ffffff",
             color: "#111827",
             cursor: "pointer",
+            display: isDesktop ? "none" : "inline-flex",
           }}
         >
           {isOpen ? (
@@ -159,11 +172,10 @@ export default function Navbar() {
         <div
           id="primary-navigation"
           style={{
-            display: "none",
+            display: isDesktop ? "flex" : "none",
             gap: "24px",
             alignItems: "center",
           }}
-          className="desktop-nav"
         >
           {links.map((link) => (
             <Link
@@ -182,7 +194,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {isOpen && (
+      {!isDesktop && isOpen && (
         <>
           <button
             type="button"
@@ -232,18 +244,6 @@ export default function Navbar() {
           </div>
         </>
       )}
-
-      <style jsx>{`
-        @media (min-width: 768px) {
-          nav button {
-            display: none;
-          }
-
-          .desktop-nav {
-            display: flex !important;
-          }
-        }
-      `}</style>
     </nav>
   );
 }
