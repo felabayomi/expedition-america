@@ -29,6 +29,7 @@ export const cityProfiles: CityProfile[] = [
     actionLinks: {
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773847428891-url3s5xui",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773850469105-d1wnoah2w",
+      deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773860118991-xyrorarej",
     },
     experience: {
       signature: "A nonstop city rhythm with skyline views and neighborhood personality.",
@@ -47,30 +48,32 @@ export const cityProfiles: CityProfile[] = [
     actionLinks: {
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773847567905-40a4r9uvy",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773851461442-j5jfnqm6p",
+      deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773870465950-q90omoi9i",
     },
     experience: {
-      signature: "Big-city architecture, lake views, and an easy neighborhood flow.",
-      bestFor: "Food-focused travelers, architecture fans, long weekends",
-      whenToGo: "May-October",
-      picks: ["River architecture cruise", "West Loop dining", "Museum Campus day"],
+      signature: "Lakefront architecture, neighborhoods, and legendary music.",
+      bestFor: "Foodies, architecture buffs, music lovers",
+      whenToGo: "May-September",
+      picks: ["Riverwalk stroll", "Art Institute visit", "Deep-dish pizza night"],
     },
   },
   {
     name: "Miami",
     region: "Florida",
-    vibe: "Beachfront luxury, nightlife, and coastal art scenes.",
-    highlights: ["South Beach", "Art Deco", "Latin-inspired dining"],
+    vibe: "Coastal sunshine, creative districts, and iconic views.",
+    highlights: ["Beach + city balance", "Studios + design", "Food neighborhoods"],
     image:
       "https://mediahost.app/api/media/serve/2c9188045dd02cf3e6ee1f82a13d430d?w=1200&h=800&fit=fill&q=80",
     actionLinks: {
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773847891058-08ot5fxxu",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773851948565-uknwquatf",
+      deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773871449104-kq4qgyc5b",
     },
     experience: {
-      signature: "Beachfront glamour mixed with vibrant nightlife and art energy.",
-      bestFor: "Beach escapes, nightlife, luxury stays",
+      signature: "Coastal sunshine, creative districts, and iconic views.",
+      bestFor: "Beach lovers, nightlife seekers, art fans",
       whenToGo: "November-April",
-      picks: ["South Beach sunrise", "Wynwood murals", "Little Havana evening"],
+      picks: ["South Beach day", "Wynwood Walls", "Little Havana food tour"],
     },
   },
   {
@@ -83,6 +86,7 @@ export const cityProfiles: CityProfile[] = [
     actionLinks: {
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773848101804-brv7ow16m",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773852333960-8j64e6rr1",
+      deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773872650010-x1839uf5j",
     },
     experience: {
       signature: "Creative districts, golden-hour coastlines, and iconic city scenes.",
@@ -101,6 +105,7 @@ export const cityProfiles: CityProfile[] = [
     actionLinks: {
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773848342430-1ual35twv",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773852674820-99kusm699",
+      deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773873010820-67adp7d8k",
     },
     experience: {
       signature: "Music-heavy nightlife and laid-back daytime adventures.",
@@ -119,6 +124,7 @@ export const cityProfiles: CityProfile[] = [
     actionLinks: {
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773848509644-h8labmno1",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773853309098-dvgrlk5pd",
+      deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773873129516-6fetk6lh6",
     },
     experience: {
       signature: "Music City moments with deep Southern food and nightlife.",
@@ -137,6 +143,7 @@ export const cityProfiles: CityProfile[] = [
     actionLinks: {
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773848667076-u5o5vh4uy",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773853775045-eyt8uxw2c",
+      deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773873366229-cuh7j4my2",
     },
     experience: {
       signature: "Historic charm and scenic mountain pace for a relaxed reset.",
@@ -155,6 +162,7 @@ export const cityProfiles: CityProfile[] = [
     actionLinks: {
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773848810280-44nk541vj",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773854986165-s1y9w6idb",
+      deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773873494833-c1nmvo0lk",
     },
     experience: {
       signature: "Riverfront scenery with college-town life and local events.",
@@ -173,6 +181,7 @@ export const cityProfiles: CityProfile[] = [
     actionLinks: {
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773848994984-urlg4b5kk",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773855500362-j81nmu16a",
+      deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773873587338-b260s64v6",
     },
     experience: {
       signature: "Waterfront city breaks powered by coffee and mountain views.",
@@ -191,6 +200,7 @@ export const cityProfiles: CityProfile[] = [
     actionLinks: {
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773849339240-d4dai08jw",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773858231065-fpymvpdwk",
+      deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773873674303-757c0t40o",
     },
     experience: {
       signature: "Historic routes and coastal neighborhoods with modern dining.",
@@ -209,6 +219,7 @@ export const cityProfiles: CityProfile[] = [
     actionLinks: {
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773849504453-whxl03fl2",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773859522097-9yee14aem",
+      deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773873769805-42dhrqg1y",
     },
     experience: {
       signature: "A bold city blend of food, arts, and weekend nightlife.",
@@ -227,6 +238,7 @@ export const cityProfiles: CityProfile[] = [
     actionLinks: {
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773849684640-es9u7pz4z",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773859699825-g6m6tyfdr",
+      deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773874098151-6w6p20hr9",
     },
     experience: {
       signature: "Entertainment-first experiences with resort luxury and late nights.",
