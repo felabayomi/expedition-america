@@ -11,6 +11,7 @@ const links = [
   { href: "/experiences", label: "Experiences" },
   { href: "/events", label: "Events" },
   { href: "/deals", label: "Deals" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export default function Navbar() {

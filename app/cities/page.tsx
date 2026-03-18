@@ -1,5 +1,28 @@
 import { cityProfiles } from "@/data/cities";
 
+const cityCardActions = [
+  {
+    key: "itinerary",
+    label: "Itinerary",
+    className: "bg-sky-500 text-white hover:bg-sky-400",
+  },
+  {
+    key: "flightQuote",
+    label: "Flight Quote",
+    className: "bg-violet-500 text-white hover:bg-violet-400",
+  },
+  {
+    key: "deal",
+    label: "Deal",
+    className: "bg-emerald-500 text-white hover:bg-emerald-400",
+  },
+  {
+    key: "request",
+    label: "Request",
+    className: "bg-amber-500 text-slate-900 hover:bg-amber-400",
+  },
+] as const;
+
 export default function CitiesPage() {
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_#fef3c7_0%,_#fff7ed_35%,_#f8fafc_70%)] pb-20 text-slate-900">
@@ -53,12 +76,29 @@ export default function CitiesPage() {
                   ))}
                 </ul>
 
-                <a
-                  href={`/experiences?city=${encodeURIComponent(city.name)}`}
-                  className="mt-6 inline-flex items-center justify-center rounded-xl bg-amber-500 px-4 py-2 font-bold text-slate-900 transition hover:bg-amber-400"
-                >
-                  Open Guide
-                </a>
+                <div className="mt-6 grid grid-cols-2 gap-3">
+                  {cityCardActions.map((action) => {
+                    const href = city.actionLinks?.[action.key];
+                    const sharedClassName = [
+                      "inline-flex min-h-11 items-center justify-center rounded-xl px-4 py-2 text-sm font-bold transition",
+                      action.className,
+                      href ? "cursor-pointer" : "cursor-default opacity-70",
+                    ].join(" ");
+
+                    return (
+                      <a
+                        key={`${city.name}-${action.label}`}
+                        href={href ?? undefined}
+                        target={href ? "_blank" : undefined}
+                        rel={href ? "noreferrer" : undefined}
+                        aria-disabled={href ? undefined : true}
+                        className={sharedClassName}
+                      >
+                        {action.label}
+                      </a>
+                    );
+                  })}
+                </div>
               </div>
             </article>
           ))}
