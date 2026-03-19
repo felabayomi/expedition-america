@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import emailjs from "@emailjs/browser";
 
 const PARTICIPANT_OPTIONS = Array.from({ length: 10 }, (_, i) => i + 1);
 
@@ -14,10 +13,6 @@ const REFERRAL_OPTIONS = [
 ];
 
 export default function NYCGroupTourForm() {
-  const emailJsServiceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-  const emailJsTemplateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-  const emailJsPublicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
-
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -37,9 +32,11 @@ export default function NYCGroupTourForm() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     let fieldValue: string | boolean = value;
+
     if (type === "checkbox" && "checked" in e.target) {
       fieldValue = (e.target as HTMLInputElement).checked;
     }
+
     setForm({
       ...form,
       [name]: fieldValue,
@@ -50,38 +47,28 @@ export default function NYCGroupTourForm() {
     e.preventDefault();
     setError("");
 
-    if (!emailJsServiceId || !emailJsTemplateId || !emailJsPublicKey) {
-      setError("Email service is not configured yet. Please add EmailJS keys.");
-      return;
-    }
-
     setIsSubmitting(true);
 
     try {
-      await emailjs.send(
-        emailJsServiceId,
-        emailJsTemplateId,
-        {
-          tour_name: "NYC Group Tour",
-          tour_dates: "September 18-21, 2026",
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          participants: form.participants,
-          emergencyName: form.emergencyName,
-          emergencyPhone: form.emergencyPhone,
-          requests: form.requests,
-          referral: form.referral || "Not specified",
-          updates: form.updates ? "Yes" : "No",
+      const response = await fetch("/api/nyc-group-tour", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        {
-          publicKey: emailJsPublicKey,
-        }
-      );
+        body: JSON.stringify(form),
+      });
+
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(payload?.error || "Submission failed. Please try again.");
+      }
 
       setSubmitted(true);
-    } catch {
-      setError("Submission failed. Please try again.");
+    } catch (submissionError) {
+      const message = submissionError instanceof Error
+        ? submissionError.message
+        : "Submission failed. Please try again.";
+      setError(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -94,12 +81,9 @@ export default function NYCGroupTourForm() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white flex items-center justify-center p-6">
       <div className="max-w-5xl w-full bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl grid md:grid-cols-2 overflow-hidden">
-        {/* LEFT SIDE */}
         <div className="p-8 bg-gradient-to-br from-blue-600 to-purple-700">
           <h1 className="text-3xl font-bold mb-4">🗽 NYC Group Tour</h1>
-          <p className="text-sm opacity-90 mb-6">
-            September 18–21, 2026
-          </p>
+          <p className="text-sm opacity-90 mb-6">September 18–21, 2026</p>
           <ul className="space-y-3 text-sm">
             <li>✔ Central Park guided walk</li>
             <li>✔ Statue of Liberty & Ellis Island</li>
@@ -112,13 +96,12 @@ export default function NYCGroupTourForm() {
             <p><strong>👥 Spots Left:</strong> 24 / 30</p>
           </div>
         </div>
-        {/* FORM */}
+
         <form onSubmit={handleSubmit} className="p-8 space-y-4">
-          {error && (
-            <p className="text-red-500 text-sm mb-2">{error}</p>
-          )}
+          {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+
           <h2 className="text-2xl font-semibold mb-2">Reserve Your Spot</h2>
-          {/* Name */}
+
           <input
             type="text"
             name="name"
@@ -128,7 +111,7 @@ export default function NYCGroupTourForm() {
             onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20"
           />
-          {/* Email */}
+
           <input
             type="email"
             name="email"
@@ -138,7 +121,7 @@ export default function NYCGroupTourForm() {
             onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20"
           />
-          {/* Phone */}
+
           <input
             type="tel"
             name="phone"
@@ -149,7 +132,7 @@ export default function NYCGroupTourForm() {
             onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20"
           />
-          {/* ✅ FIXED Participants */}
+
           <select
             name="participants"
             value={form.participants}
@@ -162,7 +145,7 @@ export default function NYCGroupTourForm() {
               </option>
             ))}
           </select>
-          {/* Emergency */}
+
           <div className="grid grid-cols-2 gap-2">
             <input
               type="text"
@@ -181,7 +164,7 @@ export default function NYCGroupTourForm() {
               className="p-3 rounded-xl bg-white/20 border border-white/20"
             />
           </div>
-          {/* Requests */}
+
           <textarea
             name="requests"
             placeholder="Special Requests / Accessibility Needs"
@@ -189,7 +172,7 @@ export default function NYCGroupTourForm() {
             onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20"
           />
-          {/* ✅ FIXED Referral */}
+
           <select
             name="referral"
             value={form.referral}
@@ -205,7 +188,7 @@ export default function NYCGroupTourForm() {
               </option>
             ))}
           </select>
-          {/* Checkbox */}
+
           <label className="flex items-center gap-2 text-sm">
             <input
               type="checkbox"
@@ -215,7 +198,7 @@ export default function NYCGroupTourForm() {
             />
             Receive updates about future tours
           </label>
-          {/* Submit */}
+
           <button
             type="submit"
             disabled={isSubmitting}

@@ -76,3 +76,19 @@ create table if not exists public.lead_submissions (
 ```
 
 If you want a different table name, set `SUPABASE_LEADS_TABLE` to match it.
+
+## NYC Group Tour Email Setup
+
+The form on `/nyc-group-tour` posts to `/api/nyc-group-tour`, which sends the email through EmailJS from the server.
+
+Add these to `.env.local`:
+
+```bash
+EMAILJS_SERVICE_ID="YOUR_EMAILJS_SERVICE_ID"
+EMAILJS_TEMPLATE_ID="YOUR_EMAILJS_TEMPLATE_ID"
+EMAILJS_PUBLIC_KEY="YOUR_EMAILJS_PUBLIC_KEY"
+EMAILJS_PRIVATE_KEY="YOUR_EMAILJS_PRIVATE_KEY"
+```
+
+Your EmailJS account must allow API access for non-browser applications, since the request is sent from the Next.js server route.
+If EmailJS strict mode is enabled, the private key is required.
