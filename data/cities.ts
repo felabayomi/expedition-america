@@ -170,7 +170,7 @@ export const cityProfiles: CityProfile[] = [
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773848810280-44nk541vj",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773854986165-s1y9w6idb",
       deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773873494833-c1nmvo0lk",
-      request: "Group Travel",
+      request: "/morgantown-group-tour",
     },
     experience: {
       signature: "Riverfront scenery with college-town life and local events.",
