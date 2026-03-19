@@ -1,18 +1,12 @@
 "use client";
-import { useState } from "react";
-
-const PARTICIPANT_OPTIONS = Array.from({ length: 10 }, (_, i) => i + 1);
-
-const REFERRAL_OPTIONS = [
-  "Instagram",
-  "Facebook",
-  "Google",
-  "Friend / Referral",
-  "Email Campaign",
-  "Other",
-];
+import React from "react";
+import { useForm, ValidationError } from "@formspree/react";
 
 export default function NYCGroupTourForm() {
+  const [state, handleSubmit] = useForm("mzdjyqkj");
+  if (state.succeeded) {
+    return <p className="text-center text-xl mt-10">Thanks for joining!</p>;
+  }
   // No state or JS handlers needed for plain HTML form
 
   return (
