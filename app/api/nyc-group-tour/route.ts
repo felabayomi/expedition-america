@@ -31,16 +31,29 @@ export async function POST(request: Request) {
     const publicKey = process.env.EMAILJS_PUBLIC_KEY;
     const privateKey = process.env.EMAILJS_PRIVATE_KEY;
 
-    if (!serviceId || !templateId || !publicKey || !privateKey) {
+    const missingEnvVars: string[] = [];
+    if (!serviceId) missingEnvVars.push("EMAILJS_SERVICE_ID");
+    if (!templateId) missingEnvVars.push("EMAILJS_TEMPLATE_ID");
+    if (!publicKey) missingEnvVars.push("EMAILJS_PUBLIC_KEY");
+    if (!privateKey) missingEnvVars.push("EMAILJS_PRIVATE_KEY");
+
+    if (missingEnvVars.length > 0) {
       return NextResponse.json(
-        { error: "Email service is not fully configured on the server. Missing EmailJS private key." },
+        {
+          error: `Email service is not fully configured on the server. Missing: ${missingEnvVars.join(", ")}`,
+        },
         { status: 500 }
       );
     }
 
+    const safeServiceId = serviceId as string;
+    const safeTemplateId = templateId as string;
+    const safePublicKey = publicKey as string;
+    const safePrivateKey = privateKey as string;
+
     await emailjs.send(
-      serviceId,
-      templateId,
+      safeServiceId,
+      safeTemplateId,
       {
         tour_name: "NYC Group Tour",
         tour_dates: "September 18-21, 2026",
@@ -55,8 +68,8 @@ export async function POST(request: Request) {
         updates: payload.updates ? "Yes" : "No",
       },
       {
-        publicKey,
-        privateKey,
+        publicKey: safePublicKey,
+        privateKey: safePrivateKey,
       }
     );
 

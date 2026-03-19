@@ -92,3 +92,25 @@ EMAILJS_PRIVATE_KEY="YOUR_EMAILJS_PRIVATE_KEY"
 
 Your EmailJS account must allow API access for non-browser applications, since the request is sent from the Next.js server route.
 If EmailJS strict mode is enabled, the private key is required.
+
+Configuration health check endpoint:
+
+- `GET /api/nyc-group-tour/health`
+
+Sample responses:
+
+```json
+{
+  "ok": true,
+  "nycGroupTourEmailConfigured": true,
+  "missing": []
+}
+```
+
+```json
+{
+  "ok": false,
+  "nycGroupTourEmailConfigured": false,
+  "missing": ["EMAILJS_PRIVATE_KEY"]
+}
+```
