@@ -30,7 +30,7 @@ export const cityProfiles: CityProfile[] = [
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773847428891-url3s5xui",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773850469105-d1wnoah2w",
       deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773860118991-xyrorarej",
-      request: "Group Travel",
+      request: "/nyc-group-tour",
     },
     experience: {
       signature: "A nonstop city rhythm with skyline views and neighborhood personality.",
@@ -50,7 +50,7 @@ export const cityProfiles: CityProfile[] = [
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773847567905-40a4r9uvy",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773851461442-j5jfnqm6p",
       deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773870465950-q90omoi9i",
-      request: "Group Travel",
+      request: "/chicago-group-tour",
     },
     experience: {
       signature: "Lakefront architecture, neighborhoods, and legendary music.",
