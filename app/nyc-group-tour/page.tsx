@@ -37,10 +37,32 @@ export default function NYCGroupTourForm() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(form);
-    alert("🎉 Registration Submitted!");
+    try {
+      const res = await fetch("https://formspree.io/f/xwkrjvdo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("Submission failed");
+      alert("🎉 Registration Submitted!");
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        participants: "1",
+        updates: false,
+        emergencyName: "",
+        emergencyPhone: "",
+        requests: "",
+        referral: "",
+      });
+    } catch (err) {
+      alert("Submission failed. Please try again.");
+    }
   };
 
   return (
