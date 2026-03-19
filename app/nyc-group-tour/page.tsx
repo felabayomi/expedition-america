@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
-import { useForm, ValidationError } from "@formspree/react";
+import React, { useRef } from "react";
+import emailjs from "@emailjs/browser";
 
 const PARTICIPANT_OPTIONS = Array.from({ length: 10 }, (_, i) => i + 1);
 
