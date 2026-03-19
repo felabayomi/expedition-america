@@ -41,7 +41,7 @@ export default function NYCGroupTourForm() {
         </div>
 
         {/* FORM */}
-        <form onSubmit={handleSubmit} className="p-8 space-y-4">
+        <form action="https://formspree.io/f/xwkrjvdo" method="POST" className="p-8 space-y-4">
 
           <h2 className="text-2xl font-semibold mb-2">Reserve Your Spot</h2>
 
