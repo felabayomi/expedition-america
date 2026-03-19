@@ -130,7 +130,7 @@ export const cityProfiles: CityProfile[] = [
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773848509644-h8labmno1",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773853309098-dvgrlk5pd",
       deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773873129516-6fetk6lh6",
-      request: "Group Travel",
+      request: "/nashville-group-tour",
     },
     experience: {
       signature: "Music City moments with deep Southern food and nightlife.",
