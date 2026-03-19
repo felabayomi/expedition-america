@@ -90,7 +90,7 @@ export const cityProfiles: CityProfile[] = [
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773848101804-brv7ow16m",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773852333960-8j64e6rr1",
       deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773872650010-x1839uf5j",
-      request: "Group Travel",
+      request: "/los-angeles-group-tour",
     },
     experience: {
       signature: "Creative districts, golden-hour coastlines, and iconic city scenes.",
