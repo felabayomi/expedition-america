@@ -70,7 +70,7 @@ export const cityProfiles: CityProfile[] = [
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773847891058-08ot5fxxu",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773851948565-uknwquatf",
       deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773871449104-kq4qgyc5b",
-      request: "Group Travel",
+      request: "/miami-group-tour",
     },
     experience: {
       signature: "Coastal sunshine, creative districts, and iconic views.",
