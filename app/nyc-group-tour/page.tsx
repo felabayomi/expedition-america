@@ -40,12 +40,16 @@ export default function NYCGroupTourForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      const formData = new URLSearchParams();
+      Object.entries(form).forEach(([key, value]) => {
+        formData.append(key, typeof value === "boolean" ? String(value) : value);
+      });
       const res = await fetch("https://formspree.io/f/xwkrjvdo", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: JSON.stringify(form),
+        body: formData.toString(),
       });
       if (!res.ok) throw new Error("Submission failed");
       alert("🎉 Registration Submitted!");
