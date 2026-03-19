@@ -190,7 +190,7 @@ export const cityProfiles: CityProfile[] = [
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773848994984-urlg4b5kk",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773855500362-j81nmu16a",
       deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773873587338-b260s64v6",
-      request: "Group Travel",
+      request: "/seattle-group-tour",
     },
     experience: {
       signature: "Waterfront city breaks powered by coffee and mountain views.",

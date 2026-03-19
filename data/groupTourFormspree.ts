@@ -7,6 +7,7 @@ export const GROUP_TOUR_FORMSPREE_ENDPOINTS = {
   morgantown: "https://formspree.io/f/mreyjaba",
   nashville: "https://formspree.io/f/xnjgwzww",
   nyc: "https://formspree.io/f/mzdjyqkj",
+  seattle: "https://formspree.io/f/xnjgwbdb",
 } as const;
 
 export type GroupTourCityKey = keyof typeof GROUP_TOUR_FORMSPREE_ENDPOINTS;
