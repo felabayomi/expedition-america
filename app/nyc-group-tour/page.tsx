@@ -14,6 +14,10 @@ const REFERRAL_OPTIONS = [
 ];
 
 export default function NYCGroupTourForm() {
+  const emailJsServiceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+  const emailJsTemplateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+  const emailJsPublicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -28,6 +32,7 @@ export default function NYCGroupTourForm() {
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
@@ -44,13 +49,21 @@ export default function NYCGroupTourForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+
+    if (!emailJsServiceId || !emailJsTemplateId || !emailJsPublicKey) {
+      setError("Email service is not configured yet. Please add EmailJS keys.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
       await emailjs.send(
-        "YOUR_SERVICE_ID", // Replace with your EmailJS service ID
-        "YOUR_TEMPLATE_ID", // Replace with your EmailJS template ID
+        emailJsServiceId,
+        emailJsTemplateId,
         {
           tour_name: "NYC Group Tour",
-          tour_dates: "Sept 18–21, 2026",
+          tour_dates: "September 18-21, 2026",
           name: form.name,
           email: form.email,
           phone: form.phone,
@@ -61,11 +74,16 @@ export default function NYCGroupTourForm() {
           referral: form.referral || "Not specified",
           updates: form.updates ? "Yes" : "No",
         },
-        "YOUR_PUBLIC_KEY" // Replace with your EmailJS public key
+        {
+          publicKey: emailJsPublicKey,
+        }
       );
+
       setSubmitted(true);
-    } catch (err) {
-      setError("Failed to send");
+    } catch {
+      setError("Submission failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -200,9 +218,10 @@ export default function NYCGroupTourForm() {
           {/* Submit */}
           <button
             type="submit"
+            disabled={isSubmitting}
             className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:scale-105 transition-transform p-3 rounded-xl font-semibold"
           >
-            🚀 Book My Spot
+            {isSubmitting ? "Sending..." : "🚀 Book My Spot"}
           </button>
         </form>
       </div>
