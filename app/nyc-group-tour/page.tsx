@@ -51,8 +51,6 @@ export default function NYCGroupTourForm() {
             name="name"
             placeholder="Full Name"
             required
-            value={form.name}
-            onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20"
           />
 
@@ -62,8 +60,6 @@ export default function NYCGroupTourForm() {
             name="email"
             placeholder="Email Address"
             required
-            value={form.email}
-            onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20"
           />
 
@@ -74,16 +70,12 @@ export default function NYCGroupTourForm() {
             placeholder="Phone Number"
             required
             minLength={10}
-            value={form.phone}
-            onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20"
           />
 
           {/* ✅ FIXED Participants */}
           <select
             name="participants"
-            value={form.participants}
-            onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20 text-white"
           >
             {PARTICIPANT_OPTIONS.map((num) => (
@@ -99,16 +91,12 @@ export default function NYCGroupTourForm() {
               type="text"
               name="emergencyName"
               placeholder="Emergency Contact"
-              value={form.emergencyName}
-              onChange={handleChange}
               className="p-3 rounded-xl bg-white/20 border border-white/20"
             />
             <input
               type="tel"
               name="emergencyPhone"
               placeholder="Emergency Phone"
-              value={form.emergencyPhone}
-              onChange={handleChange}
               className="p-3 rounded-xl bg-white/20 border border-white/20"
             />
           </div>
@@ -117,16 +105,12 @@ export default function NYCGroupTourForm() {
           <textarea
             name="requests"
             placeholder="Special Requests / Accessibility Needs"
-            value={form.requests}
-            onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20"
           />
 
           {/* ✅ FIXED Referral */}
           <select
             name="referral"
-            value={form.referral}
-            onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20 text-white"
           >
             <option value="" className="text-black bg-white">
@@ -144,8 +128,6 @@ export default function NYCGroupTourForm() {
             <input
               type="checkbox"
               name="updates"
-              checked={form.updates}
-              onChange={handleChange}
             />
             Receive updates about future tours
           </label>
