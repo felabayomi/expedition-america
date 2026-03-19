@@ -25,15 +25,19 @@ export default function ChicagoGroupTourForm() {
     referral: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    let fieldValue: string | boolean = value;
+    if (type === "checkbox" && "checked" in e.target) {
+      fieldValue = (e.target as HTMLInputElement).checked;
+    }
     setForm({
       ...form,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: fieldValue,
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const res = await fetch("https://formspree.io/f/mwvradvy", {
