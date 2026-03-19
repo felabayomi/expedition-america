@@ -2,6 +2,8 @@
 import React from "react";
 import { useForm, ValidationError } from "@formspree/react";
 
+const PARTICIPANT_OPTIONS = Array.from({ length: 10 }, (_, i) => i + 1);
+
 export default function NYCGroupTourForm() {
   const [state, handleSubmit] = useForm("mzdjyqkj");
   if (state.succeeded) {
