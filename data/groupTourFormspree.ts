@@ -1,4 +1,5 @@
 export const GROUP_TOUR_FORMSPREE_ENDPOINTS = {
+  austin: "https://formspree.io/f/mvzwlqqv",
   chicago: "https://formspree.io/f/mwvradvy",
   losAngeles: "https://formspree.io/f/mojkrlew",
   miami: "https://formspree.io/f/xreyjzkg",

@@ -110,7 +110,7 @@ export const cityProfiles: CityProfile[] = [
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773848342430-1ual35twv",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773852674820-99kusm699",
       deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773873010820-67adp7d8k",
-      request: "Group Travel",
+      request: "/austin-group-tour",
     },
     experience: {
       signature: "Music-heavy nightlife and laid-back daytime adventures.",
