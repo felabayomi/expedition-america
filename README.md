@@ -77,40 +77,14 @@ create table if not exists public.lead_submissions (
 
 If you want a different table name, set `SUPABASE_LEADS_TABLE` to match it.
 
-## NYC Group Tour Email Setup
+## NYC Group Tour Submission
 
-The form on `/nyc-group-tour` posts to `/api/nyc-group-tour`, which sends the email through EmailJS from the server.
+The forms on `/chicago-group-tour` and `/nyc-group-tour` submit directly to Formspree from the client.
 
-Add these to `.env.local`:
+Each city has its own unique endpoint configured in [data/groupTourFormspree.ts](data/groupTourFormspree.ts).
 
-```bash
-EMAILJS_SERVICE_ID="YOUR_EMAILJS_SERVICE_ID"
-EMAILJS_TEMPLATE_ID="YOUR_EMAILJS_TEMPLATE_ID"
-EMAILJS_PUBLIC_KEY="YOUR_EMAILJS_PUBLIC_KEY"
-EMAILJS_PRIVATE_KEY="YOUR_EMAILJS_PRIVATE_KEY"
-```
+To add a new city form with a dedicated Formspree endpoint:
 
-Your EmailJS account must allow API access for non-browser applications, since the request is sent from the Next.js server route.
-If EmailJS strict mode is enabled, the private key is required.
-
-Configuration health check endpoint:
-
-- `GET /api/nyc-group-tour/health`
-
-Sample responses:
-
-```json
-{
-  "ok": true,
-  "nycGroupTourEmailConfigured": true,
-  "missing": []
-}
-```
-
-```json
-{
-  "ok": false,
-  "nycGroupTourEmailConfigured": false,
-  "missing": ["EMAILJS_PRIVATE_KEY"]
-}
-```
+1. Add the city key and URL to [data/groupTourFormspree.ts](data/groupTourFormspree.ts).
+2. In that city page, use `getGroupTourFormspreeEndpoint("cityKey")`.
+3. Keep the submit logic identical to Chicago/NYC.

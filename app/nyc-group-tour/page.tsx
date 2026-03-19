@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { getGroupTourFormspreeEndpoint } from "../../data/groupTourFormspree";
 
 const PARTICIPANT_OPTIONS = Array.from({ length: 10 }, (_, i) => i + 1);
 
@@ -11,6 +12,8 @@ const REFERRAL_OPTIONS = [
   "Email Campaign",
   "Other",
 ];
+
+const NYC_FORMSPREE_ENDPOINT = getGroupTourFormspreeEndpoint("nyc");
 
 export default function NYCGroupTourForm() {
   const [form, setForm] = useState({
@@ -50,17 +53,21 @@ export default function NYCGroupTourForm() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/nyc-group-tour", {
+      const response = await fetch(NYC_FORMSPREE_ENDPOINT, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          tourName: "NYC Group Tour",
+          tourDates: "September 18-21, 2026",
+        }),
       });
 
       if (!response.ok) {
-        const payload = (await response.json().catch(() => null)) as { error?: string } | null;
-        throw new Error(payload?.error || "Submission failed. Please try again.");
+        throw new Error("Submission failed. Please try again.");
       }
 
       setSubmitted(true);

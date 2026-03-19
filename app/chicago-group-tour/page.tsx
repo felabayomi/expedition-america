@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { getGroupTourFormspreeEndpoint } from "../../data/groupTourFormspree";
 
 const PARTICIPANT_OPTIONS = Array.from({ length: 10 }, (_, i) => i + 1);
 
@@ -11,6 +12,8 @@ const REFERRAL_OPTIONS = [
   "Email Campaign",
   "Other",
 ];
+
+const CHICAGO_FORMSPREE_ENDPOINT = getGroupTourFormspreeEndpoint("chicago");
 
 export default function ChicagoGroupTourForm() {
   const [form, setForm] = useState({
@@ -40,10 +43,11 @@ export default function ChicagoGroupTourForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await fetch("https://formspree.io/f/mwvradvy", {
+      const res = await fetch(CHICAGO_FORMSPREE_ENDPOINT, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json",
         },
         body: JSON.stringify(form),
       });
