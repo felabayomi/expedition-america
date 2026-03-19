@@ -13,61 +13,7 @@ const REFERRAL_OPTIONS = [
 ];
 
 export default function NYCGroupTourForm() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    participants: "1",
-    updates: false,
-    emergencyName: "",
-    emergencyPhone: "",
-    requests: "",
-    referral: "",
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target;
-    let fieldValue: string | boolean = value;
-    if (type === "checkbox" && "checked" in e.target) {
-      fieldValue = (e.target as HTMLInputElement).checked;
-    }
-    setForm({
-      ...form,
-      [name]: fieldValue,
-    });
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const formData = new URLSearchParams();
-      Object.entries(form).forEach(([key, value]) => {
-        formData.append(key, typeof value === "boolean" ? String(value) : value);
-      });
-      const res = await fetch("https://formspree.io/f/xwkrjvdo", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: formData.toString(),
-      });
-      if (!res.ok) throw new Error("Submission failed");
-      alert("🎉 Registration Submitted!");
-      setForm({
-        name: "",
-        email: "",
-        phone: "",
-        participants: "1",
-        updates: false,
-        emergencyName: "",
-        emergencyPhone: "",
-        requests: "",
-        referral: "",
-      });
-    } catch (err) {
-      alert("Submission failed. Please try again.");
-    }
-  };
+  // No state or JS handlers needed for plain HTML form
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white flex items-center justify-center p-6">
