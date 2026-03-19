@@ -1,7 +1,6 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import emailjs from "@emailjs/browser";
-import { useForm } from "@formspree/react";
 
 const PARTICIPANT_OPTIONS = Array.from({ length: 10 }, (_, i) => i + 1);
 
@@ -14,12 +13,64 @@ const REFERRAL_OPTIONS = [
   "Other",
 ];
 
-export default function NYCGroupTourForm() {
-  const [state, handleSubmit] = useForm("mzdjyqkj");
-  if (state.succeeded) {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    participants: "1",
+    updates: false,
+    emergencyName: "",
+    emergencyPhone: "",
+    requests: "",
+    referral: "",
+  });
+
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    let fieldValue: string | boolean = value;
+    if (type === "checkbox" && "checked" in e.target) {
+      fieldValue = (e.target as HTMLInputElement).checked;
+    }
+    setForm({
+      ...form,
+      [name]: fieldValue,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    try {
+      await emailjs.send(
+        "YOUR_SERVICE_ID", // Replace with your EmailJS service ID
+        "YOUR_TEMPLATE_ID", // Replace with your EmailJS template ID
+        {
+          tour_name: "NYC Group Tour",
+          tour_dates: "Sept 18–21, 2026",
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          participants: form.participants,
+          emergencyName: form.emergencyName,
+          emergencyPhone: form.emergencyPhone,
+          requests: form.requests,
+          referral: form.referral || "Not specified",
+          updates: form.updates ? "Yes" : "No",
+        },
+        "YOUR_PUBLIC_KEY" // Replace with your EmailJS public key
+      );
+      setSubmitted(true);
+    } catch (err) {
+      setError("Failed to send");
+    }
+  };
+
+  if (submitted) {
     return <p className="text-center text-xl mt-10">Thanks for joining!</p>;
   }
-  // No state or JS handlers needed for plain HTML form
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white flex items-center justify-center p-6">
@@ -47,7 +98,10 @@ export default function NYCGroupTourForm() {
         </div>
 
         {/* FORM */}
-        <form action="https://formspree.io/f/xwkrjvdo" method="POST" className="p-8 space-y-4">
+        <form onSubmit={handleSubmit} className="p-8 space-y-4">
+          {error && (
+            <p className="text-red-500 text-sm mb-2">{error}</p>
+          )}
 
           <h2 className="text-2xl font-semibold mb-2">Reserve Your Spot</h2>
 
@@ -57,6 +111,8 @@ export default function NYCGroupTourForm() {
             name="name"
             placeholder="Full Name"
             required
+            value={form.name}
+            onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20"
           />
 
@@ -66,6 +122,8 @@ export default function NYCGroupTourForm() {
             name="email"
             placeholder="Email Address"
             required
+            value={form.email}
+            onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20"
           />
 
@@ -76,12 +134,16 @@ export default function NYCGroupTourForm() {
             placeholder="Phone Number"
             required
             minLength={10}
+            value={form.phone}
+            onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20"
           />
 
           {/* ✅ FIXED Participants */}
           <select
             name="participants"
+            value={form.participants}
+            onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20 text-white"
           >
             {PARTICIPANT_OPTIONS.map((num) => (
@@ -97,12 +159,16 @@ export default function NYCGroupTourForm() {
               type="text"
               name="emergencyName"
               placeholder="Emergency Contact"
+              value={form.emergencyName}
+              onChange={handleChange}
               className="p-3 rounded-xl bg-white/20 border border-white/20"
             />
             <input
               type="tel"
               name="emergencyPhone"
               placeholder="Emergency Phone"
+              value={form.emergencyPhone}
+              onChange={handleChange}
               className="p-3 rounded-xl bg-white/20 border border-white/20"
             />
           </div>
@@ -111,12 +177,16 @@ export default function NYCGroupTourForm() {
           <textarea
             name="requests"
             placeholder="Special Requests / Accessibility Needs"
+            value={form.requests}
+            onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20"
           />
 
           {/* ✅ FIXED Referral */}
           <select
             name="referral"
+            value={form.referral}
+            onChange={handleChange}
             className="w-full p-3 rounded-xl bg-white/20 border border-white/20 text-white"
           >
             <option value="" className="text-black bg-white">
@@ -134,6 +204,8 @@ export default function NYCGroupTourForm() {
             <input
               type="checkbox"
               name="updates"
+              checked={form.updates}
+              onChange={handleChange}
             />
             Receive updates about future tours
           </label>
