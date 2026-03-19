@@ -4,6 +4,15 @@ import { useForm, ValidationError } from "@formspree/react";
 
 const PARTICIPANT_OPTIONS = Array.from({ length: 10 }, (_, i) => i + 1);
 
+const REFERRAL_OPTIONS = [
+  "Instagram",
+  "Facebook",
+  "Google",
+  "Friend / Referral",
+  "Email Campaign",
+  "Other",
+];
+
 export default function NYCGroupTourForm() {
   const [state, handleSubmit] = useForm("mzdjyqkj");
   if (state.succeeded) {
