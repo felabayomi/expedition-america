@@ -150,7 +150,7 @@ export const cityProfiles: CityProfile[] = [
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773848667076-u5o5vh4uy",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773853775045-eyt8uxw2c",
       deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773873366229-cuh7j4my2",
-      request: "Group Travel",
+      request: "/cumberland-group-tour",
     },
     experience: {
       signature: "Historic charm and scenic mountain pace for a relaxed reset.",
