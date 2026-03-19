@@ -210,7 +210,7 @@ export const cityProfiles: CityProfile[] = [
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773849339240-d4dai08jw",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773858231065-fpymvpdwk",
       deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773873674303-757c0t40o",
-      request: "Group Travel",
+      request: "/boston-group-tour",
     },
     experience: {
       signature: "Historic routes and coastal neighborhoods with modern dining.",
@@ -230,7 +230,7 @@ export const cityProfiles: CityProfile[] = [
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773849504453-whxl03fl2",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773859522097-9yee14aem",
       deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773873769805-42dhrqg1y",
-      request: "Group Travel",
+      request: "/atlanta-group-tour",
     },
     experience: {
       signature: "A bold city blend of food, arts, and weekend nightlife.",
@@ -250,7 +250,7 @@ export const cityProfiles: CityProfile[] = [
       itinerary: "https://timeline.citydiscoverer.guide/itinerary/itinerary-1773849684640-es9u7pz4z",
       flightQuote: "https://timeline.citydiscoverer.guide/flight-quote/flight-quote-1773859699825-g6m6tyfdr",
       deal: "https://timeline.citydiscoverer.guide/deal/travel-deal-1773874098151-6w6p20hr9",
-      request: "Group Travel",
+      request: "/las-vegas-group-tour",
     },
     experience: {
       signature: "Entertainment-first experiences with resort luxury and late nights.",
