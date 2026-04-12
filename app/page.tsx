@@ -1,66 +1,58 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
 export default function Home() {
-  const cities = [
-    {
-      name: "New York",
-      description: "Discover skyline energy, borough culture, food, nightlife.",
-      image:
-        "https://mediahost.app/api/media/serve/9e299a0c06586017049de94298aca9c8?w=1200&h=800&fit=fill&q=80",
-      link: "https://view.citydiscoverer.ai/guide/guide-1771859354952-4t7xi961f",
-    },
-    {
-      name: "Chicago",
-      description:
-        "Experience lakefront neighborhoods, architecture, deep flavor, music.",
-      image:
-        "https://mediahost.app/api/media/serve/724f5fd545aa4192d0a7daeb6702cd4b?w=1200&h=800&fit=fill&q=80",
-      link: "https://view.citydiscoverer.ai/guide/guide-1773624777197-m7ubf4xfb",
-    },
-    {
-      name: "Miami",
-      description: "Chase coastal vibes, art, rhythms, flavors, nightlife.",
-      image:
-        "https://mediahost.app/api/media/serve/2c9188045dd02cf3e6ee1f82a13d430d?w=1200&h=800&fit=fill&q=80",
-      link: "https://view.citydiscoverer.ai/guide/guide-1773625213797-hg5yh4mbw",
-    },
-    {
-      name: "Los Angeles",
-      description:
-        "Find creative districts, sunshine, cuisine, style, scenes.",
-      image:
-        "https://mediahost.app/api/media/serve/ec2141f74c0deb143ae805870ed8b76a?w=1200&h=800&fit=fill&q=80",
-      link: "https://view.citydiscoverer.ai/guide/guide-1773625446163-4ftgk5mz7",
-    },
-    {
-      name: "Austin",
-      description: "Dive into live music, tacos, trails, culture.",
-      image:
-        "https://mediahost.app/api/media/serve/88c385abd6bb06057665592faf9040c0?w=1200&h=800&fit=fill&q=80",
-      link: "https://view.citydiscoverer.ai/guide/guide-1773625820913-ykaxhij5s",
-    },
-    {
-      name: "Nashville",
-      description:
-        "Feel honky-tonks, heritage, hot chicken, creative spirit.",
-      image:
-        "https://mediahost.app/api/media/serve/bc393f73bf155047848fb16a6b1505eb?w=1200&h=800&fit=fill&q=80",
-      link: "https://view.citydiscoverer.ai/guide/guide-1773625659740-u6qg2k8cf",
-    },
-    {
-      name: "Cumberland, MD",
-      description:
-        "Explore mountain charm, history, trails, shops, culture.",
-      image:
-        "https://mediahost.app/api/media/serve/b8d6aefbb772dcb526e4524418064f58?w=1200&h=800&fit=fill&q=80",
-      link: "https://view.citydiscoverer.ai/guide/guide-1773626074863-be7bkjcxs",
-    },
-    {
-      name: "Morgantown, WV",
-      description: "Enjoy college energy, river views, food, events.",
-      image:
-        "https://mediahost.app/api/media/serve/f6a3fcbb68bd45ce352c8df5974c8f7a?w=1200&h=800&fit=fill&q=80",
-      link: "https://view.citydiscoverer.ai/guide/guide-1773626265200-2uqm13sef",
-    },
-  ];
+  const [cities, setCities] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          'https://felix-platform-backend.onrender.com/api/expedition-america-standalone/content/export',
+          {
+            headers: {
+              'cache-control': 'no-store',
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // Transform API format to component format
+        const homeSection = data.pages?.home;
+        const citiesData = homeSection?.ordered
+          ?.map((sectionKey: string) => {
+            const section = homeSection.sections[sectionKey];
+            return {
+              name: section.title || '',
+              description: section.subtitle || '',
+              image: section.imageUrl || '',
+              link: section.ctaUrl || '#',
+            };
+          })
+          .filter((city: any) => city.name && city.image) || [];
+
+        setCities(citiesData);
+        setError(null);
+      } catch (err) {
+        console.error('Failed to fetch cities:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load cities');
+        setCities([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCities();
+  }, []);
 
   return (
     <main style={{ fontFamily: "Arial", margin: 0 }}>
@@ -139,53 +131,67 @@ export default function Home() {
           Featured Cities
         </h2>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px,1fr))",
-gap: "30px",
-maxWidth: "1400px",
-            margin: "0 auto",
-          }}
-        >
-          {cities.map((city) => (
-  <a
-    key={city.name}
-    href={city.link}
-    target="_blank"
-    rel="noopener noreferrer"
-    style={{ textDecoration: "none", color: "inherit" }}
-  >
-    <div
-      style={{
-        border: "1px solid #eee",
-        borderRadius: "10px",
-        overflow: "hidden",
-        background: "#fff",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-        cursor: "pointer"
-      }}
-    >
-      <img
-        src={city.image}
-        alt={city.name}
-        style={{
-          width: "100%",
-          height: "220px",
-          objectFit: "cover"
-        }}
-      />
+        {loading && (
+          <div style={{ textAlign: "center", padding: "40px", color: "#666" }}>
+            <p>Loading featured cities...</p>
+          </div>
+        )}
 
-      <div style={{ padding: "20px", textAlign: "center" }}>
-        <h3>{city.name}</h3>
-        <p style={{ fontSize: "14px", color: "#666" }}>
-          {city.description}
-        </p>
-      </div>
-    </div>
-  </a>
-))}
-      </div>
+        {error && (
+          <div style={{ textAlign: "center", padding: "40px", color: "#d32f2f" }}>
+            <p>Unable to load cities. Please try again later.</p>
+          </div>
+        )}
+
+        {!loading && !error && (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(320px,1fr))",
+              gap: "30px",
+              maxWidth: "1400px",
+              margin: "0 auto",
+            }}
+          >
+            {cities.map((city) => (
+              <a
+                key={city.name}
+                href={city.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <div
+                  style={{
+                    border: "1px solid #eee",
+                    borderRadius: "10px",
+                    overflow: "hidden",
+                    background: "#fff",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                    cursor: "pointer"
+                  }}
+                >
+                  <img
+                    src={city.image}
+                    alt={city.name}
+                    style={{
+                      width: "100%",
+                      height: "220px",
+                      objectFit: "cover"
+                    }}
+                  />
+
+                  <div style={{ padding: "20px", textAlign: "center" }}>
+                    <h3>{city.name}</h3>
+                    <p style={{ fontSize: "14px", color: "#666" }}>
+                      {city.description}
+                    </p>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
 </section>
 
       {/* EXPERIENCE SECTION */}

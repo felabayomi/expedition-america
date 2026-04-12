@@ -1,4 +1,6 @@
-import { cityProfiles } from "@/data/cities";
+'use client';
+
+import { useEffect, useState } from 'react';
 
 const cityCardActions = [
   {
@@ -24,6 +26,63 @@ const cityCardActions = [
 ] as const;
 
 export default function CitiesPage() {
+  const [cityProfiles, setCityProfiles] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          'https://felix-platform-backend.onrender.com/api/expedition-america-standalone/content/export',
+          {
+            headers: {
+              'cache-control': 'no-store',
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // Transform API format to cityProfiles format
+        const citiesSection = data.pages?.cities;
+        const profiles = citiesSection?.ordered
+          ?.map((sectionKey: string) => {
+            const section = citiesSection.sections[sectionKey];
+            return {
+              name: section.title || '',
+              region: section.region || '',
+              vibe: section.subtitle || '',
+              highlights: section.highlights ? JSON.parse(section.highlights) : [],
+              image: section.imageUrl || '',
+              actionLinks: {
+                itinerary: section.itineraryUrl,
+                flightQuote: section.flightQuoteUrl,
+                deal: section.dealUrl,
+                request: section.ctaUrl,
+              },
+            };
+          })
+          .filter((city: any) => city.name && city.image) || [];
+
+        setCityProfiles(profiles);
+        setError(null);
+      } catch (err) {
+        console.error('Failed to fetch cities:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load cities');
+        setCityProfiles([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCities();
+  }, []);
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_#fef3c7_0%,_#fff7ed_35%,_#f8fafc_70%)] pb-20 text-slate-900">
       <section className="mx-auto max-w-7xl px-6 pt-14">
@@ -39,13 +98,28 @@ export default function CitiesPage() {
             music, architecture, and unforgettable weekend itineraries.
           </p>
           <div className="mt-8 inline-flex rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white">
-            {cityProfiles.length} featured cities available
+            {loading ? 'Loading...' : `${cityProfiles.length} featured cities available`}
           </div>
         </div>
       </section>
 
-      <section className="mx-auto mt-10 max-w-7xl px-6">
-        <div className="grid gap-7 sm:grid-cols-2 xl:grid-cols-3">
+      {error && (
+        <div className="mx-auto mt-8 max-w-7xl px-6">
+          <div className="rounded-lg bg-red-50 p-6 text-red-700">
+            <p>Unable to load cities. Please try again later.</p>
+          </div>
+        </div>
+      )}
+
+      {loading && (
+        <div className="mx-auto mt-10 max-w-7xl px-6 text-center">
+          <p className="text-slate-600">Loading featured cities...</p>
+        </div>
+      )}
+
+      {!loading && !error && (
+        <section className="mx-auto mt-10 max-w-7xl px-6">
+          <div className="grid gap-7 sm:grid-cols-2 xl:grid-cols-3">
           {cityProfiles.map((city) => (
             <article
               key={`${city.name}-${city.region}`}
@@ -104,6 +178,7 @@ export default function CitiesPage() {
           ))}
         </div>
       </section>
+      )}
     </main>
   );
 }
