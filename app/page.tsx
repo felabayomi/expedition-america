@@ -27,16 +27,17 @@ export default function Home() {
         const data = await response.json();
         
         // Transform API format to component format
-        // ordered[] contains full section objects (not just keys)
+        // ordered[] contains full section objects; only include city-* sections
         const homeSection = data.pages?.home;
         const citiesData = (homeSection?.ordered as any[] ?? [])
+          .filter((section: any) => section.sectionKey?.startsWith('city-') && section.imageUrl)
           .map((section: any) => ({
             name: section.title || '',
             description: section.subtitle || '',
             image: section.imageUrl || '',
             link: section.ctaUrl || '#',
-          }))
-          .filter((city: any) => city.name && city.image);
+            ctaLabel: section.ctaLabel || '',
+          }));
 
         setCities(citiesData);
         setError(null);
@@ -145,48 +146,65 @@ export default function Home() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(320px,1fr))",
-              gap: "30px",
-              maxWidth: "1400px",
+              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 340px))",
+              gap: "24px",
+              maxWidth: "1200px",
               margin: "0 auto",
+              justifyContent: "center",
             }}
           >
             {cities.map((city) => (
-              <a
+              <div
                 key={city.name}
-                href={city.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: "none", color: "inherit" }}
+                style={{
+                  border: "1px solid #eee",
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                  background: "#fff",
+                  boxShadow: "0 2px 10px rgba(0,0,0,0.07)",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
               >
-                <div
+                <img
+                  src={city.image}
+                  alt={city.name}
                   style={{
-                    border: "1px solid #eee",
-                    borderRadius: "10px",
-                    overflow: "hidden",
-                    background: "#fff",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-                    cursor: "pointer"
+                    width: "100%",
+                    height: "200px",
+                    objectFit: "cover",
+                    display: "block",
                   }}
-                >
-                  <img
-                    src={city.image}
-                    alt={city.name}
-                    style={{
-                      width: "100%",
-                      height: "220px",
-                      objectFit: "cover"
-                    }}
-                  />
-
-                  <div style={{ padding: "20px", textAlign: "center" }}>
-                    <h3>{city.name}</h3>
-                    <p style={{ fontSize: "14px", color: "#666" }}>
+                />
+                <div style={{ padding: "16px 20px 20px", textAlign: "center", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                  <div>
+                    <h3 style={{ margin: "0 0 8px", fontSize: "18px", color: "#111" }}>{city.name}</h3>
+                    <p style={{ margin: "0 0 16px", fontSize: "14px", color: "#666", lineHeight: "1.5" }}>
                       {city.description}
                     </p>
                   </div>
+                  {city.link && city.link !== '#' && (
+                    <a
+                      href={city.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: "inline-block",
+                        padding: "10px 20px",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        background: "#0070f3",
+                        color: "#fff",
+                        borderRadius: "8px",
+                        textDecoration: "none",
+                        alignSelf: "center",
+                      }}
+                    >
+                      {city.ctaLabel || `View ${city.name}`}
+                    </a>
+                  )}
                 </div>
-              </a>
+              </div>
             ))}
           </div>
         )}
