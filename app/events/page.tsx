@@ -1,6 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+type CmsSection = {
+  title?: string;
+  subtitle?: string;
+  body?: string;
+  ctaLabel?: string;
+  ctaUrl?: string;
+};
 
 type FormState = {
   fullName: string;
@@ -34,6 +42,33 @@ export default function EventsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [hero, setHero] = useState<CmsSection | null>(null);
+  const [intro, setIntro] = useState<CmsSection | null>(null);
+
+  useEffect(() => {
+    const loadContent = async () => {
+      try {
+        const response = await fetch(
+          "https://felix-platform-backend.onrender.com/api/expedition-america-standalone/content/export",
+          {
+            headers: {
+              "cache-control": "no-store",
+            },
+          }
+        );
+        if (!response.ok) {
+          return;
+        }
+        const data = await response.json();
+        const eventsPage = data?.pages?.events;
+        setHero(eventsPage?.sections?.["events-hero"] || null);
+        setIntro(eventsPage?.sections?.["events-calendar-intro"] || null);
+      } catch (error) {
+        console.error("Failed to load events content", error);
+      }
+    };
+    loadContent();
+  }, []);
 
   function updateField<K extends keyof FormState>(field: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -81,12 +116,11 @@ export default function EventsPage() {
         <div className="absolute right-0 top-0 h-56 w-56 rounded-full bg-emerald-300/20 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-6 py-18 md:py-22">
           <h1 className="max-w-4xl text-4xl font-black leading-tight md:text-6xl">
-            Discover Any U.S. City Like a Local
+            {hero?.title || "Discover Any U.S. City Like a Local"}
           </h1>
           <p className="mt-5 max-w-3xl text-lg text-cyan-50 md:text-xl">
-            Tell us where you are going and we will build your experience. Expedition America
-            curates neighborhoods, hidden gems, food, culture, nightlife, and real-time city
-            moments based on how you want to travel.
+            {hero?.subtitle ||
+              "Tell us where you are going and we will build your experience. Expedition America curates neighborhoods, hidden gems, food, culture, nightlife, and real-time city moments based on how you want to travel."}
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <a
@@ -110,10 +144,8 @@ export default function EventsPage() {
           <p className="text-sm font-bold uppercase tracking-[0.16em] text-cyan-700">What We Do</p>
           <h2 className="mt-3 text-3xl font-black md:text-4xl">A Smarter Way to Explore Cities</h2>
           <p className="mt-4 max-w-4xl text-slate-600 md:text-lg">
-            Expedition America goes beyond generic travel guides. We connect you with the true
-            energy of a city, from emerging neighborhoods and local food scenes to cultural events
-            and hidden gems. Whether you are planning ahead or exploring in real time, we help you
-            move with confidence, style, and local insight.
+            {intro?.subtitle ||
+              "Expedition America goes beyond generic travel guides. We connect you with the true energy of a city, from emerging neighborhoods and local food scenes to cultural events and hidden gems. Whether you are planning ahead or exploring in real time, we help you move with confidence, style, and local insight."}
           </p>
         </div>
       </section>

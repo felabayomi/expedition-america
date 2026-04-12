@@ -25,8 +25,22 @@ const cityCardActions = [
   },
 ] as const;
 
+type CityProfile = {
+  name: string;
+  region: string;
+  vibe: string;
+  highlights: string[];
+  image: string;
+  actionLinks: {
+    itinerary?: string;
+    flightQuote?: string;
+    deal?: string;
+    request?: string;
+  };
+};
+
 export default function CitiesPage() {
-  const [cityProfiles, setCityProfiles] = useState<any[]>([]);
+  const [cityProfiles, setCityProfiles] = useState<CityProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -52,13 +66,13 @@ export default function CitiesPage() {
         // Transform API format to cityProfiles format
         const citiesSection = data.pages?.cities;
         const profiles = citiesSection?.ordered
-          ?.map((sectionKey: string) => {
+          ?.map((sectionKey: string): CityProfile => {
             const section = citiesSection.sections[sectionKey];
             return {
               name: section.title || '',
               region: section.region || '',
               vibe: section.subtitle || '',
-              highlights: section.highlights ? JSON.parse(section.highlights) : [],
+              highlights: [],
               image: section.imageUrl || '',
               actionLinks: {
                 itinerary: section.itineraryUrl,
@@ -68,7 +82,7 @@ export default function CitiesPage() {
               },
             };
           })
-          .filter((city: any) => city.name && city.image) || [];
+          .filter((city: CityProfile) => city.name && city.image) || [];
 
         setCityProfiles(profiles);
         setError(null);

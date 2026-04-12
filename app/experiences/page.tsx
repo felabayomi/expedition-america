@@ -1,7 +1,16 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { cityProfiles, getCityProfileByName } from "@/data/cities";
 
 type SearchParams = {
   city?: string | string[];
+};
+
+type CmsSection = {
+  title?: string;
+  subtitle?: string;
+  body?: string;
 };
 
 export default function ExperiencesPage({
@@ -9,24 +18,45 @@ export default function ExperiencesPage({
 }: {
   searchParams?: SearchParams;
 }) {
+  const [cmsHero, setCmsHero] = useState<CmsSection | null>(null);
+  const [cmsIntro, setCmsIntro] = useState<CmsSection | null>(null);
+
   const requestedCity =
     typeof searchParams?.city === "string" ? decodeURIComponent(searchParams.city).trim() : "";
 
   const requestedCityLower = requestedCity.toLowerCase();
-  const selectedExperience = requestedCity
-    ? getCityProfileByName(requestedCity)
-    : undefined;
+  const selectedExperience = requestedCity ? getCityProfileByName(requestedCity) : undefined;
   const quickMatches = requestedCity
-    ? cityProfiles.filter((entry) =>
-        entry.name.toLowerCase().includes(requestedCityLower)
-      )
+    ? cityProfiles.filter((entry) => entry.name.toLowerCase().includes(requestedCityLower))
     : [];
 
-  const listToRender = selectedExperience
-    ? [selectedExperience]
-    : requestedCity
-      ? []
-      : cityProfiles;
+  const listToRender = selectedExperience ? [selectedExperience] : requestedCity ? [] : cityProfiles;
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const response = await fetch(
+          "https://felix-platform-backend.onrender.com/api/expedition-america-standalone/content/export",
+          {
+            headers: {
+              "cache-control": "no-store",
+            },
+          }
+        );
+        if (!response.ok) {
+          return;
+        }
+        const data = await response.json();
+        const experiencesPage = data?.pages?.experiences;
+        setCmsHero(experiencesPage?.sections?.["experiences-hero"] || null);
+        setCmsIntro(experiencesPage?.sections?.["experience-list-intro"] || null);
+      } catch (error) {
+        console.error("Failed to load experiences content", error);
+      }
+    };
+
+    fetchContent();
+  }, []);
 
   return (
     <main className="min-h-screen bg-[linear-gradient(180deg,_#ecfeff_0%,_#f8fafc_35%,_#ffffff_100%)] pb-20 text-slate-900">
@@ -38,13 +68,18 @@ export default function ExperiencesPage({
           <h1 className="mt-3 text-4xl font-black md:text-6xl">
             {selectedExperience
               ? `${selectedExperience.name} Experience Guide`
-              : "Choose A City Experience"}
+              : cmsHero?.title || "Choose A City Experience"}
           </h1>
           <p className="mt-5 max-w-3xl text-base text-slate-700 md:text-lg">
             {selectedExperience
               ? `You are viewing matched experiences for ${selectedExperience.name}, ${selectedExperience.region}.`
-              : "Explore destination-specific recommendations designed for weekend escapes, longer vacations, and first-time city visits."}
+              : cmsHero?.subtitle ||
+                "Explore destination-specific recommendations designed for weekend escapes, longer vacations, and first-time city visits."}
           </p>
+
+          {!selectedExperience && cmsIntro?.subtitle ? (
+            <p className="mt-4 max-w-3xl text-base text-slate-600 md:text-lg">{cmsIntro.subtitle}</p>
+          ) : null}
 
           <form action="/experiences" method="get" className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
             <input

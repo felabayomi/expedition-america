@@ -1,7 +1,19 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 type ProductLink = {
   title: string;
   description: string;
   href: string;
+};
+
+type CmsSection = {
+  title?: string;
+  subtitle?: string;
+  body?: string;
+  ctaLabel?: string;
+  ctaUrl?: string;
 };
 
 const productLinks: ProductLink[] = [
@@ -28,14 +40,53 @@ const productLinks: ProductLink[] = [
 ];
 
 export default function AboutPage() {
+  const [aboutHero, setAboutHero] = useState<CmsSection | null>(null);
+  const [mission, setMission] = useState<CmsSection | null>(null);
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const response = await fetch(
+          "https://felix-platform-backend.onrender.com/api/expedition-america-standalone/content/export",
+          {
+            headers: {
+              "cache-control": "no-store",
+            },
+          }
+        );
+        if (!response.ok) {
+          return;
+        }
+        const data = await response.json();
+        const aboutPage = data?.pages?.about;
+        if (!aboutPage?.sections) {
+          return;
+        }
+
+        setAboutHero(aboutPage.sections["about-hero"] || null);
+        setMission(aboutPage.sections["mission"] || null);
+      } catch (error) {
+        console.error("Failed to load about content", error);
+      }
+    };
+
+    fetchContent();
+  }, []);
+
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-12 text-slate-900">
       <section className="mx-auto max-w-5xl rounded-3xl border border-slate-200 bg-white p-8 shadow-lg md:p-10">
         <p className="text-sm font-bold uppercase tracking-[0.16em] text-cyan-700">About</p>
-        <h1 className="mt-3 text-3xl font-black md:text-5xl">Expedition America</h1>
+        <h1 className="mt-3 text-3xl font-black md:text-5xl">
+          {aboutHero?.title || "Expedition America"}
+        </h1>
         <p className="mt-4 max-w-3xl text-slate-600 md:text-lg">
-          We help travelers discover U.S. cities with better local insight, smarter planning,
-          and direct support when they need it.
+          {aboutHero?.subtitle ||
+            "We help travelers discover U.S. cities with better local insight, smarter planning, and direct support when they need it."}
+        </p>
+        <p className="mt-3 max-w-3xl text-slate-600 md:text-lg">
+          {mission?.body ||
+            "We combine city intelligence, practical tools, and traveler support to make each trip easier to plan and better to experience."}
         </p>
 
         <div className="mt-8 grid gap-5 sm:grid-cols-2 md:grid-cols-4">

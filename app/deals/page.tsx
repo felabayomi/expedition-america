@@ -1,4 +1,15 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { getCityProfileByName } from "@/data/cities";
+
+type CmsSection = {
+  title?: string;
+  subtitle?: string;
+  body?: string;
+  ctaLabel?: string;
+  ctaUrl?: string;
+};
 
 type Deal = {
   title: string;
@@ -289,18 +300,56 @@ function runTests() {
 runTests();
 
 export default function TravelDealsPage() {
+  const [hero, setHero] = useState<CmsSection | null>(null);
+  const [intro, setIntro] = useState<CmsSection | null>(null);
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const response = await fetch(
+          "https://felix-platform-backend.onrender.com/api/expedition-america-standalone/content/export",
+          {
+            headers: {
+              "cache-control": "no-store",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          return;
+        }
+
+        const data = await response.json();
+        const dealsPage = data?.pages?.deals;
+        setHero(dealsPage?.sections?.["deals-hero"] || null);
+        setIntro(dealsPage?.sections?.["deals-grid-intro"] || null);
+      } catch (error) {
+        console.error("Failed to load deals content", error);
+      }
+    };
+
+    fetchContent();
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <section className="bg-gradient-to-br from-cyan-600 via-sky-600 to-emerald-500 py-20 text-white">
         <div className="mx-auto max-w-6xl px-6 text-center">
           <h1 className="text-4xl font-black md:text-6xl">
-            Travel Deals You Can Book Today 🌍✈️
+            {hero?.title || "Travel Deals You Can Book Today 🌍✈️"}
           </h1>
           <p className="mx-auto mt-6 max-w-3xl text-lg text-white/90 md:text-xl">
-            Explore top vacation deals including all-inclusive resorts, beach getaways,
-            and U.S. travel experiences. Message us to lock in your trip.
+            {hero?.subtitle ||
+              "Explore top vacation deals including all-inclusive resorts, beach getaways, and U.S. travel experiences. Message us to lock in your trip."}
           </p>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 pt-8">
+        <p className="rounded-2xl border border-sky-100 bg-sky-50 p-4 text-center text-slate-700">
+          {intro?.subtitle ||
+            "Current deal picks are curated to help you compare destination value quickly."}
+        </p>
       </section>
 
       <section className="mx-auto max-w-7xl px-6 py-16">
