@@ -64,25 +64,23 @@ export default function CitiesPage() {
         const data = await response.json();
         
         // Transform API format to cityProfiles format
+        // ordered[] contains full section objects (not just keys)
         const citiesSection = data.pages?.cities;
-        const profiles = citiesSection?.ordered
-          ?.map((sectionKey: string): CityProfile => {
-            const section = citiesSection.sections[sectionKey];
-            return {
-              name: section.title || '',
-              region: section.region || '',
-              vibe: section.subtitle || '',
-              highlights: [],
-              image: section.imageUrl || '',
-              actionLinks: {
-                itinerary: section.itineraryUrl,
-                flightQuote: section.flightQuoteUrl,
-                deal: section.dealUrl,
-                request: section.ctaUrl,
-              },
-            };
-          })
-          .filter((city: CityProfile) => city.name && city.image) || [];
+        const profiles = (citiesSection?.ordered as any[] ?? [])
+          .map((section: any): CityProfile => ({
+            name: section.title || '',
+            region: section.region || '',
+            vibe: section.subtitle || '',
+            highlights: [],
+            image: section.imageUrl || '',
+            actionLinks: {
+              itinerary: section.itineraryUrl,
+              flightQuote: section.flightQuoteUrl,
+              deal: section.dealUrl,
+              request: section.ctaUrl,
+            },
+          }))
+          .filter((city: CityProfile) => city.name && city.image);
 
         setCityProfiles(profiles);
         setError(null);

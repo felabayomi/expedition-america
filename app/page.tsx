@@ -27,18 +27,16 @@ export default function Home() {
         const data = await response.json();
         
         // Transform API format to component format
+        // ordered[] contains full section objects (not just keys)
         const homeSection = data.pages?.home;
-        const citiesData = homeSection?.ordered
-          ?.map((sectionKey: string) => {
-            const section = homeSection.sections[sectionKey];
-            return {
-              name: section.title || '',
-              description: section.subtitle || '',
-              image: section.imageUrl || '',
-              link: section.ctaUrl || '#',
-            };
-          })
-          .filter((city: any) => city.name && city.image) || [];
+        const citiesData = (homeSection?.ordered as any[] ?? [])
+          .map((section: any) => ({
+            name: section.title || '',
+            description: section.subtitle || '',
+            image: section.imageUrl || '',
+            link: section.ctaUrl || '#',
+          }))
+          .filter((city: any) => city.name && city.image);
 
         setCities(citiesData);
         setError(null);
