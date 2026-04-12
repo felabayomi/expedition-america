@@ -18,7 +18,7 @@ export default function ContactPage() {
     const fetchContent = async () => {
       try {
         const response = await fetch(
-          "https://felix-platform-backend.onrender.com/api/expedition-america-standalone/content/export",
+          "/api/cms-export",
           {
             headers: {
               "cache-control": "no-store",
