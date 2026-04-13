@@ -25,7 +25,7 @@
 
 .hero {
     position: relative;
-    padding: 16px 24px 4px;
+    padding: 34px 24px 22px;
     text-align: center;
     color: #fff;
     background-image:
@@ -39,8 +39,8 @@
 .hero::after {
     content: '';
     position: absolute;
-    inset: auto -10% -8px;
-    height: 16px;
+    inset: auto -10% -16px;
+    height: 32px;
     background: linear-gradient(180deg, rgba(243, 246, 243, 0), rgba(243, 246, 243, 1));
 }
 
@@ -61,7 +61,7 @@
 }
 
 .heroActions {
-    margin-top: 8px;
+    margin-top: 14px;
     display: flex;
     gap: 14px;
     justify-content: center;
@@ -108,7 +108,7 @@
 }
 
 .citiesSection {
-    padding-top: 0;
+    padding-top: 24px;
 }
 
 .sectionHead {
@@ -271,7 +271,7 @@
     }
 
     .citiesSection {
-        padding-top: 0;
+        padding-top: 16px;
     }
 
     .hero {
