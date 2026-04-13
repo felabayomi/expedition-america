@@ -25,7 +25,7 @@
 
 .hero {
     position: relative;
-    padding: 34px 24px 22px;
+    padding: 44px 24px 28px;
     text-align: center;
     color: #fff;
     background-image:
@@ -108,7 +108,7 @@
 }
 
 .citiesSection {
-    padding-top: 24px;
+    padding-top: 32px;
 }
 
 .sectionHead {
@@ -271,7 +271,7 @@
     }
 
     .citiesSection {
-        padding-top: 16px;
+        padding-top: 22px;
     }
 
     .hero {
